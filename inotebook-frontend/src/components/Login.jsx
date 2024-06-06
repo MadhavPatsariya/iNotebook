@@ -11,10 +11,12 @@ export default function Login() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            textAlign: 'center',
         }}>
-            <div className="container" style={{ maxWidth: '30vw' }}>
+            <div className="col-md-3">
                 <form>
-                    <div style={{ backgroundColor: '#e7e4d5', opacity: '0.9', padding: '20px' }}>
+                    {/* backgroundColor: '#e7e4d5' */}
+                    <div style={{ backgroundColor: '#d3d0c1', opacity: '0.95', padding: '40px 20px' }}>
                         <div className="mb-3">
                             <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
                             <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
@@ -23,11 +25,11 @@ export default function Login() {
                             <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
                             <input type="password" className="form-control" id="exampleInputPassword1" />
                         </div>
-                        <button type="submit" className="btn btn-primary">Submit</button>
+                        <button type="submit" className="btn" style={{backgroundColor: "#8e9a65"}}>Submit</button>
                     </div>
                 </form>
             </div>
         </div>
-        
+
     )
 }
