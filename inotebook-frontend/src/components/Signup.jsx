@@ -1,16 +1,22 @@
-import React, { useState } from 'react'
-import backgroundImage from '../utilities/login-page-background.jpg'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import backgroundImage from '../utilities/sign-up-bg.jpg'
+import {createUser} from '../services/userService'
 import { useNavigate } from "react-router-dom"
 import User from '../models/user'
-import {loginUser} from '../services/userService'
-export default function Login() {
+export default function Signup() {
 
     const [user, setUser] = useState(new User());
-    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
 
-    const navigate = useNavigate();
+    const navigate = useNavigate()
+
+    const updateName = (event) => {
+        const newValue = event.target.value;
+        setName(newValue);
+        console.log("setName:" + newValue)
+    }
 
     const updateEmail = (event) => {
         const newValue = event.target.value;
@@ -24,24 +30,29 @@ export default function Login() {
         console.log("setPassword:" + newValue)
     }
 
-    const login = async (event) => {
-        var user = new User('', email, password);
+    const createUserModel = async (event) => {
+        var user = new User(name, email, password);
         setUser(user);
         event.preventDefault();
-        try {
-            const data = await loginUser(user);
-            const jwtToken = data.authToken;
-            const id = data.id;
-            console.log("token in login: " + jwtToken);
-            console.log("id in login: " + id);
-            if (jwtToken) {
-              window.localStorage.setItem('jwt-Token', jwtToken);
-              navigate('/home', { state: { id } });
-            }
-          } catch (error) {
-            console.error('Failed to create user:', error);
-          }
-    } 
+    try {
+      const jwtToken = await createUser(user);
+      console.log("token in signUp: " + jwtToken)
+      if (jwtToken) {
+        window.localStorage.setItem('jwt-Token', jwtToken);
+        navigate('/home');
+      }
+    } catch (error) {
+      console.error('Failed to create user:', error);
+    }
+    }
+
+    // useEffect( () => {
+    //     var jwtToken = createUser(user);
+    //     if(jwtToken != null){
+    //         window.localStorage.setItem("jwt-Token", jwtToken); 
+    //         navigate('/home');
+    //     }
+    // },[]);
 
     return (
         <div style={{
@@ -60,6 +71,10 @@ export default function Login() {
                     {/* backgroundColor: '#e7e4d5' */}
                     <div style={{ backgroundColor: '#d3d0c1', opacity: '0.95', padding: '40px 20px' }}>
                         <div className="mb-3">
+                            <label htmlFor="exampleInputEmail1" className="form-label">Name</label>
+                            <input type="text" className="form-control" aria-describedby="emailHelp" value={name} onChange={updateName}/>
+                        </div>
+                        <div className="mb-3">
                             <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
                             <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value={email} onChange={updateEmail}/>
                         </div>
@@ -67,16 +82,10 @@ export default function Login() {
                             <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
                             <input type="password" className="form-control" id="exampleInputPassword1" value={password} onChange={updatePassword}/>
                         </div>
-                        <div className="mb-3">
-                            <button type="submit" className="btn" style={{backgroundColor: "#8e9a65"}} onClick={login}>Login</button>
-                        </div>
-                        <div className='mb-3'>
-                            <Link to="/signup">Sign up now</Link>
-                        </div>
+                        <button type="submit" className="btn" style={{ backgroundColor: "#8e9a65" }} onClick={createUserModel}>Submit</button>
                     </div>
                 </form>
             </div>
         </div>
-
     )
 }

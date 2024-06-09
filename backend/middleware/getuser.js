@@ -7,6 +7,7 @@ const getUser = async (request, response, next) => {
         if (!token) {
             return response.status(401).json({ error: "Please authenticate using correct JWT!" });
         }
+        console.log("TOKRN:"+ token);
         var data = jwt.verify(token, constants.JWT_SECRET);
         request.user = data.user;
         next();

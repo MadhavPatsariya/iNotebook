@@ -96,7 +96,7 @@ router.post(
                 },
             };
             var authToken = jwt.sign(data, constants.JWT_SECRET);
-            return response.json({ authToken });
+            return response.json({ authToken: authToken, id: userExists.id });
         } catch (error) {
             console.log(`error: ${error.message}`)
             response.status(502);

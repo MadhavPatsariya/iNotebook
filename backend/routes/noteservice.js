@@ -3,6 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const notes = require('../models/Notes');
 const getUser = require("../middleware/getuser");
+
 /**
  * create new notes
  */
@@ -83,7 +84,9 @@ router.put('/update-note/:id', getUser, async (request, response) => {
 router.get('/all-notes', getUser,async (request, response) => {
     try{
         var userId = request.user.id;
+        console.log("ID from token: " + userId);
         const allNotes = await notes.find({ user: userId }).populate('user').exec();
+        console.log("NOTE FETCHED FROM DB: " + allNotes);
         return response.json(allNotes);
     }
     catch(error){
@@ -115,12 +118,15 @@ router.get('/note', getUser,  [
 });
 
 /**
- * get one note by name
+ * get one note by id
  */
 router.get('/note/:id', getUser, async (request, response) => {
     try{
         var userId = request.user.id;
+        console.log("ID from param: " + request.params.id);
+        console.log("ID from token: " + userId);
         const currentNote = await notes.findOne({ _id: request.params.id, user: userId});
+        console.log("NOTE FETCHED FROM DB: " + currentNote);
         return response.json(currentNote);
     }
     catch(error){
