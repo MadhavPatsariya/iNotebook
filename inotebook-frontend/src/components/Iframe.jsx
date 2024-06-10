@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import Notes from '../models/note';
 import { createNotes, updateNote } from '../services/noteService';
 import { useLocation } from 'react-router-dom';
+import Alert from './Alert';
 
 export default function Iframe(props) {
     const location = useLocation();
@@ -13,7 +14,12 @@ export default function Iframe(props) {
     const [tag, setTag] = useState(noteObject.tag ||'');
     const [note, setNote] = useState(noteObject.note || '');
 
-    const [object, setObject] = useState(new Notes());
+    const [updated, setUpdated] = useState(false);
+    const [created, setCreated] = useState(false);
+
+    const alertStyle = {
+        marginTop: '3.5rem'
+      }
 
     useEffect(() => {
     }, [noteObject])
@@ -33,15 +39,19 @@ export default function Iframe(props) {
         if ((noteObject != null || noteObject != undefined) && noteObject.id != null) {
             console.log("update clicked")
             await updateNote(newNote, jwtToken, noteObject.id);
+            setUpdated(true);
         }
         else {
             console.log("creaete clicked")
             await createNotes(newNote, jwtToken);
+            setCreated(true);
         }
     }
     return (
         <>
             <Navbar name="user" />
+            {updated === true ? (<Alert description="Note Updated Successfully" type="success" style={alertStyle}/>) : null}
+            {created === true ? (<Alert description="Note Created Successfully" type="success" style={alertStyle}/>) : null}
             <div className='container' style={{ marginTop: '7rem' }}>
                 <div className="input-group input-group-sm mb-3">
                     <span className="input-group-text" id="inputGroup-sizing-sm" style={{ minWidth: '8rem' }}>Name of the note</span>

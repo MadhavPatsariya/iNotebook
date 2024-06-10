@@ -49,8 +49,10 @@ export const loginUser = async(user) => {
                 'Content-type': 'application/json; charset=UTF-8',
             },
         })
+        const status = await response.status;
+        console.log(status);
         const data = await response.json();
-        return {authToken : data.authToken, id: data.id};
+        return {authToken : data.authToken, id: data.id, status: status};
     }
     catch(error){
         console.log(error);
